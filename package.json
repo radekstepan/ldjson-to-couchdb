@@ -1,0 +1,18 @@
+{
+  "name": "ldjson-to-couchdb",
+  "version": "0.0.0",
+  "dependencies": {
+    "coffee-script": "^1.8.0",
+    "highland": "^2.0.0",
+    "nano": "^6.0.1",
+    "ndjson": "^1.3.0"
+  },
+  "main": "index.js",
+  "bin": {
+    "ldjson-to-couchdb": "./bin/run.js"
+  },
+  "scripts": {
+    "start": "echo '{\"foo\": \"fighters\", \"bar\": \"baz\"}' | ./bin/run.js 'http://localhost:5984/db' key"
+  },
+  "author": "Radek Stepan <radeks@redmantech.ca>"
+}
