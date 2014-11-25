@@ -1,18 +1,24 @@
 {
   "name": "ldjson-to-couchdb",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "author": "Radek Stepan <radeks@redmantech.ca>",
   "dependencies": {
     "coffee-script": "^1.8.0",
     "highland": "^2.0.0",
     "nano": "^6.0.1",
     "ndjson": "^1.3.0"
   },
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.0.1",
+    "proxyquire": "^1.1.0"
+  },
   "main": "index.js",
   "bin": {
     "ldjson-to-couchdb": "./bin/run.js"
   },
   "scripts": {
-    "start": "echo '{\"foo\": \"fighters\", \"bar\": \"baz\"}' | ./bin/run.js 'http://localhost:5984/db' key"
-  },
-  "author": "Radek Stepan <radeks@redmantech.ca>"
+    "start": "echo '{\"foo\": \"fighters\", \"bar\": \"baz\"}' | ./bin/run.js 'http://localhost:5984/db' foo",
+    "test": "env TEST=1 ./node_modules/.bin/mocha --compilers coffee:coffee-script/register --ui exports --slow 2000 --bail"
+  }
 }
