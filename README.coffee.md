@@ -52,12 +52,13 @@ $ cat data.json | ldjson-to-couchdb "http://localhost:5984/db" _id
       key = key or process.argv[3] unless 'TEST' of process.env
 
       through = (docs) ->
-        # Bulk insert.
+        # Bulk insert when no key specified.
         return _ db.bulk { docs } unless key?
 
         update = (doc) ->
           # Just insert if our doc does not have a key.
-          return _ db.insert doc unless (doc_name = doc[key])?
+          # TODO: this should be an insert, but tests won't pass.
+          return _ db.bulk { 'docs': [ doc ] } unless (doc_name = doc[key])?
 
           _ (push, next) ->
             db.head doc_name, (err, res, headers) ->
