@@ -1,7 +1,9 @@
 {
   "name": "ldjson-to-couchdb",
+  "description": "Pipe STDIN in LDJSON format to CouchDB",
   "version": "0.0.1",
   "author": "Radek Stepan <radeks@redmantech.ca>",
+  "license": "AGPL-3.0",
   "dependencies": {
     "coffee-script": "^1.8.0",
     "highland": "^2.0.0",
@@ -20,5 +22,16 @@
   "scripts": {
     "start": "echo '{\"foo\": \"fighters\", \"bar\": \"baz\"}' | ./bin/run.js 'http://localhost:5984/db' foo",
     "test": "env TEST=1 ./node_modules/.bin/mocha --compilers coffee:coffee-script/register --ui exports --slow 2000 --bail"
-  }
+  },
+  "keywords": [
+    "ndjson",
+    "ldjson",
+    "couchdb",
+    "gasket",
+    "pipe"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/radekstepan/ldjson-to-couchdb.git"
+  },
 }
