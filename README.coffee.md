@@ -43,11 +43,21 @@ If you pass a `key` as an argument, we will update existing document rather than
 $ cat data.json | ldjson-to-couchdb "http://localhost:5984/db" _id
 ```
 
+###Output Stream
+
+The output from CouchDB is piped to STDOUT in LDJSON format:
+
+```
+{"ok":true,"id":"2524e21ff3a67c1e0b416c999b014c11","rev":"1-f443804e079279645227a179f7e373cf"}
+{"ok":true,"id":"2524e21ff3a67c1e0b416c999b015b0a","rev":"1-d35680189514ccd6046f23daa89b0f84"}
+```
+
 ##Source
 
-    _      = require 'highland'
-    ndjson = require 'ndjson'
-    nano   = require 'nano'
+    _       = require 'highland'
+    ndjson  = require 'ndjson'
+    nano    = require 'nano'
+    { EOL } = require 'os'
 
     module.exports = (db, key, batch=50) ->
       # Will throw err in bulk insert if uri not present/malformed.
@@ -55,21 +65,31 @@ $ cat data.json | ldjson-to-couchdb "http://localhost:5984/db" _id
       # The document key on which to perform update.
       key = key or process.argv[3] unless 'TEST' of process.env
 
+      # Output data in NDJSON format.
+      output = (push, err, data) ->
+        switch
+          when data instanceof Array
+            ( push err, JSON.stringify(res) + EOL for res in data )
+          else
+            push err, JSON.stringify(data) + EOL
+        push null, _.nil
+
       through = (docs) ->
         # Bulk insert when no key specified.
-        return _ db.bulk { docs } unless key?
+        unless key?
+          return _ (push, next) ->
+            db.bulk { docs }, _.partial output, push
 
         update = (doc) ->
-          # Just insert if our doc does not have a key.
-          # TODO: this should be an insert, but tests won't pass.
-          return _ db.bulk { 'docs': [ doc ] } unless (doc_name = doc[key])?
-
           _ (push, next) ->
+            # Just insert if our doc does not have a key.
+            unless (doc_name = doc[key])?
+              return db.insert doc, _.partial output, push
+
+            # Check the revision first.
             db.head doc_name, (err, res, headers) ->
               doc._rev = headers.etag[1...-1] if headers
-              db.insert doc, doc_name, (err) ->
-                push err, JSON.stringify doc
-                push null, _.nil
+              db.insert doc, doc_name, _.partial output, push
 
         # Update pipeline.
         _.pipeline _(docs), _.map(update), _.parallel batch

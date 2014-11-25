@@ -3,6 +3,7 @@
 ndjson      = require 'ndjson'
 _           = require 'highland'
 proxy       = do require('proxyquire').noCallThru
+{ EOL }     = require 'os'
 
 nano = {}
 
@@ -24,14 +25,15 @@ module.exports =
     
     called = 0
 
-    nano.bulk = (data) ->
+    nano.bulk = (data, cb) ->
       called += 1
-      data.docs
+      cb null, data.docs
 
     pipeline docs, args, (res) ->
-      assert.deepEqual res, docs
-      assert.equal called, 1
-      do done
+      _(docs).map(JSON.stringify).toArray (data) ->
+        assert.deepEqual res, ( line + EOL for line in data )
+        assert.equal called, 1
+        do done
 
   'doc insert (no key on doc)': (done) ->
     docs = [ { 'val': '1' }, { 'val': '2' } ]
@@ -39,14 +41,15 @@ module.exports =
 
     called = 0
 
-    nano.bulk = (data) ->
+    nano.insert = (data, cb) ->
       called += 1
-      data.docs
+      cb null, data
 
     pipeline docs, args, (res) ->
-      assert.deepEqual res, docs
-      assert.equal called, 2
-      do done
+      _(docs).map(JSON.stringify).toArray (data) ->
+        assert.deepEqual res, ( line + EOL for line in data )
+        assert.equal called, 2
+        do done
 
   'doc update': (done) ->
     docs = [
@@ -68,14 +71,16 @@ module.exports =
       # Bump the version.
       doc._rev = String 1 + parseInt doc._rev, 10
       db[doc_name] = doc
-      do cb
+      cb null, doc
 
     pipeline docs, args, (res) ->
+      resp = [
+        { '_id': 'number', 'val': 'one', '_rev': '0' }
+        { '_id': 'number', 'val': 'two', '_rev': '1' }
+        { '_id': 'number', 'val': 'three', '_rev': '2' }
+      ]
+
       # Each res document is an encoded string in an array.
-      _(res).map(JSON.parse).toArray (data) ->
-        assert.deepEqual data, [
-          { '_id': 'number', 'val': 'one', '_rev': '0' }
-          { '_id': 'number', 'val': 'two', '_rev': '1' }
-          { '_id': 'number', 'val': 'three', '_rev': '2' }
-        ]
+      _(resp).map(JSON.stringify).toArray (data) ->
+        assert.deepEqual res, ( line + EOL for line in data )
         do done
