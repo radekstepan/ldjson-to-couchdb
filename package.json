@@ -1,8 +1,8 @@
 {
   "name": "ldjson-to-couchdb",
   "description": "Pipe STDIN in LDJSON format to CouchDB",
-  "version": "0.0.2",
-  "author": "Radek Stepan <radeks@redmantech.ca>",
+  "version": "0.0.3",
+  "author": "Radek Stepan <dev@radekstepan.com>",
   "license": "AGPL-3.0",
   "dependencies": {
     "coffee-script": "^1.8.0",

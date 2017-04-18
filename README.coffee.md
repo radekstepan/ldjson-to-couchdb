@@ -1,4 +1,4 @@
-#ldjson-to-couchdb
+# ldjson-to-couchdb
 
 Pipe STDIN in [LDJSON](http://en.wikipedia.org/wiki/Line_Delimited_JSON) format to [CouchDB](http://couchdb.apache.org/).
 
@@ -6,7 +6,7 @@ Pipe STDIN in [LDJSON](http://en.wikipedia.org/wiki/Line_Delimited_JSON) format 
 [![Dependencies](http://img.shields.io/david/radekstepan/ldjson-to-couchdb.svg?style=flat)](https://david-dm.org/radekstepan/ldjson-to-couchdb)
 [![License](http://img.shields.io/badge/license-AGPL--3.0-red.svg?style=flat)](LICENSE)
 
-##Run
+## Run
 
 Install with [npm](https://www.npmjs.org/) and pipe `data.json` to CouchDB database called `db` on `localhost:5984`.
 
@@ -35,7 +35,7 @@ through = require('ldjson-to-couchdb')
 through('http://127.0.0.1:5984/db', '_id', 100).pipe(process.stdout)
 ```
 
-###Insert vs Update
+### Insert vs Update
 
 If you pass a `key` as an argument, we will update existing document rather than bulk insert (which us much faster).
 
@@ -43,7 +43,7 @@ If you pass a `key` as an argument, we will update existing document rather than
 $ cat data.json | ldjson-to-couchdb "http://localhost:5984/db" _id
 ```
 
-###Output Stream
+### Output Stream
 
 The output from CouchDB is piped to STDOUT in LDJSON format:
 
@@ -52,7 +52,7 @@ The output from CouchDB is piped to STDOUT in LDJSON format:
 {"ok":true,"id":"2524e21ff3a67c1e0b416c999b015b0a","rev":"1-d35680189514ccd6046f23daa89b0f84"}
 ```
 
-##Source
+## Source
 
     _       = require 'highland'
     ndjson  = require 'ndjson'
