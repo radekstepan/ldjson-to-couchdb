@@ -2,7 +2,7 @@
 
 Pipe STDIN in [LDJSON](http://en.wikipedia.org/wiki/Line_Delimited_JSON) format to [CouchDB](http://couchdb.apache.org/).
 
-![Build Status](http://img.shields.io/codeship/cd6d5370-56f6-0132-c62d-2aedc25d7739.svg?style=flat)
+[![Build Status](https://img.shields.io/travis/radekstepan/ldjson-to-couchdb/master.svg?style=flat)](https://travis-ci.org/radekstepan/ldjson-to-couchdb)
 [![Dependencies](http://img.shields.io/david/radekstepan/ldjson-to-couchdb.svg?style=flat)](https://david-dm.org/radekstepan/ldjson-to-couchdb)
 [![License](http://img.shields.io/badge/license-AGPL--3.0-red.svg?style=flat)](LICENSE)
 
